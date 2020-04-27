@@ -17,6 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class AccountTest {
 
     static EntityManagerFactory entityManagerFactory;
+    private static EntityManager entityManager;
 
     private static Map getProperties() {
         Map result = new HashMap();
@@ -30,6 +31,7 @@ public class AccountTest {
     @BeforeAll
     public static void setUpBeforeAll() throws Exception {
         entityManagerFactory = Persistence.createEntityManagerFactory("com.sasoara.model", getProperties());
+        entityManager = entityManagerFactory.createEntityManager();
     }
 
     @AfterAll
@@ -38,8 +40,7 @@ public class AccountTest {
     }
 
     @Test
-    public void saveAccountObject() {
-        EntityManager entityManager = entityManagerFactory.createEntityManager();
+    public void persistAccount() {
         entityManager.getTransaction().begin();
 
         Account account = new Account();
@@ -49,11 +50,8 @@ public class AccountTest {
         account.setAktiv(true);
 
         entityManager.persist(account);
-
         entityManager.getTransaction().commit();
-        entityManager.close();
 
         assertTrue(account.getIdAccount() > 0);
     }
-
 }

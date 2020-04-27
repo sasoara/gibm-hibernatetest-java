@@ -10,6 +10,7 @@
         </description>
 
         <class>com.sasoara.model.Person</class>
+        <class>com.sasoara.model.Account</class>
 
         <properties>
             <property name="javax.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>

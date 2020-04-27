@@ -1,17 +1,22 @@
 package com.sasoara.model;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
-@Table( name = "Person" )
+@Table(name = "Person")
 public class Person {
 
     @Id
-    @GeneratedValue( strategy= GenerationType.IDENTITY )
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long idPerson;
 
     private String name;
@@ -30,7 +35,12 @@ public class Person {
 
     private String land;
 
-    public Person() {}
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "id_Person")
+    private Set<Account> debitAccounts = new HashSet<>();
+
+    public Person() {
+    }
 
 
     public long getIdPerson() {
@@ -103,6 +113,14 @@ public class Person {
 
     public void setLand(String land) {
         this.land = land;
+    }
+
+    public Set<Account> getDebitAccounts() {
+        return debitAccounts;
+    }
+
+    public void setDebitAccounts(Set<Account> debitAccounts) {
+        this.debitAccounts = debitAccounts;
     }
 
 }

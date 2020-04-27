@@ -2,7 +2,6 @@ package com.sasoara;
 
 import com.sasoara.model.Account;
 import com.sasoara.model.AccountType;
-import com.sasoara.model.Person;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -15,7 +14,7 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class PersonTest {
+public class AccountTest {
 
     static EntityManagerFactory entityManagerFactory;
 
@@ -39,19 +38,9 @@ public class PersonTest {
     }
 
     @Test
-    public void savePersonObject() {
+    public void saveAccountObject() {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         entityManager.getTransaction().begin();
-
-        Person dana = new Person();
-        dana.setVorname("Dana J.");
-        dana.setName("Hake");
-        dana.setStrasse("Sonnenbergstrasse");
-        dana.setHausnummer(148);
-        dana.setPostleitzahl("8405");
-        dana.setOrt("Gotzenwil");
-        dana.setLand("Schweiz");
-        dana.setTelefonnummer("+41525331033");
 
         Account account = new Account();
         account.setTyp(AccountType.DEBIT);
@@ -59,15 +48,12 @@ public class PersonTest {
         account.setZins(1.5);
         account.setAktiv(true);
 
-        dana.getDebitAccounts().add(account);
-
-        entityManager.persist(dana);
         entityManager.persist(account);
 
         entityManager.getTransaction().commit();
         entityManager.close();
 
-        assertTrue(dana.getIdPerson() > 0);
         assertTrue(account.getIdAccount() > 0);
     }
+
 }

@@ -13,6 +13,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -93,5 +94,66 @@ public class PersonTest {
         System.out.println(loadedPerson);
 
         Assertions.assertEquals(dana, loadedPerson);
+    }
+
+    @Test
+    public void crudPerson() {
+        // create an entitiy Person
+        System.out.println("Starting Transaction");
+        entityManager.getTransaction().begin();
+        Person person = new Person();
+        person.setVorname("Pankaj");
+        person.setName("Poltra");
+        person.setStrasse("Penkastrasse");
+        person.setHausnummer(10);
+        person.setPostleitzahl("1000");
+        person.setOrt("Pentwil");
+        person.setLand("Schweiz");
+        person.setTelefonnummer("+41615515515");
+        System.out.println("Saving Person to Database");
+
+        entityManager.persist(person);
+        entityManager.getTransaction().commit();
+        System.out.println("Generated Person ID = " + person.getIdPerson());
+
+        // get an object using primary key.
+        Person loadedPerson = entityManager.find(Person.class, person.getIdPerson());
+        System.out.println("got object " + loadedPerson.getName() + " " + loadedPerson.getIdPerson());
+
+
+        Assertions.assertEquals(person, loadedPerson);
+
+
+        // update an entity
+        System.out.println("Person hausnummer = " + loadedPerson.getHausnummer());
+        entityManager.getTransaction().begin();
+        loadedPerson.setHausnummer(223);
+        entityManager.getTransaction().commit();
+        System.out.println("Person hausnummer = " + loadedPerson.getHausnummer());
+
+
+        Assertions.assertEquals(person.getHausnummer(), 223);
+
+
+        // get all the objects from Person table
+        @SuppressWarnings("unchecked")
+        List<Person> listPerson = entityManager.createQuery("SELECT p FROM Person p").getResultList();
+
+        if (listPerson == null) {
+            System.out.println("No person found . ");
+        } else {
+            for (Person p : listPerson) {
+                System.out.println("Person name= " + p.getName() + ", Person id " + p.getIdPerson());
+            }
+        }
+
+        // remove an entity
+        entityManager.getTransaction().begin();
+        System.out.println("Deleting Person with ID = " + loadedPerson.getIdPerson());
+        entityManager.remove(loadedPerson);
+        entityManager.getTransaction().commit();
+
+
+        Assertions.assertEquals(null, entityManager.find(Person.class, loadedPerson.getIdPerson()));
     }
 }
